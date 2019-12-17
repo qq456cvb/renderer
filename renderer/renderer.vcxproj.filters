@@ -13,5 +13,60 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Header Files\bxdf">
+      <UniqueIdentifier>{c936a541-2a4b-47d1-888f-e7491d3c463d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\camera">
+      <UniqueIdentifier>{3a6258b4-5e7e-46fd-8c72-2053feee148f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\misc">
+      <UniqueIdentifier>{c22dea9f-2609-499f-8d62-098e4b010f78}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\shape">
+      <UniqueIdentifier>{c808b11c-699b-4fc9-ab03-c0043b03712e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\bxdf">
+      <UniqueIdentifier>{db05e88d-5d6a-4be0-8020-66a3a74fcd30}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\camera">
+      <UniqueIdentifier>{c1411b5c-2ea6-4128-bc4a-e74bf4c24d8b}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="sphere.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bsdf.cpp">
+      <Filter>Source Files\bxdf</Filter>
+    </ClCompile>
+    <ClCompile Include="pinhole.cpp">
+      <Filter>Source Files\camera</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="bsdf.h">
+      <Filter>Header Files\bxdf</Filter>
+    </ClInclude>
+    <ClInclude Include="bxdf.h">
+      <Filter>Header Files\bxdf</Filter>
+    </ClInclude>
+    <ClInclude Include="pinhole.h">
+      <Filter>Header Files\camera</Filter>
+    </ClInclude>
+    <ClInclude Include="ray.h">
+      <Filter>Header Files\misc</Filter>
+    </ClInclude>
+    <ClInclude Include="sphere.h">
+      <Filter>Header Files\shape</Filter>
+    </ClInclude>
+    <ClInclude Include="shape.h">
+      <Filter>Header Files\shape</Filter>
+    </ClInclude>
+    <ClInclude Include="montecarlo.hpp">
+      <Filter>Header Files\misc</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
