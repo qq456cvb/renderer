@@ -10,7 +10,7 @@ public:
 
     float fov;
 
-    void gen_ray(float px, float py, Ray *ray);
+    Ray gen_ray(float px, float py);
 
 private:
     fvec3 c;  // cam center in world coordinate
