@@ -42,7 +42,7 @@ fvec3 Integrator::path_trace(Ray *ray, int depth, fvec3 beta) {
 
         // TODO, add Le contribution
         beta *= f * dot(next.d, isect.n) / pdf;
-        fvec3 Li = path_trace(&next, depth + 1, beta);
+        fvec3 Li{1.f, 1.f, 1.f};
         return beta * Li;
     } else {
         return fvec3{0., 0., 0.};
@@ -58,7 +58,7 @@ Mat<fvec3> Integrator::render(int width, int height) {
         for (size_t y = 0; y < height; y++)
         {
             Ray ray = cam->gen_ray((x - width / 2) / float(width),
-                (y - height / 2) / float(height));
+                (y - height / 2) / float(width));
             img.at(y, x) = path_trace(&ray);
         }
         

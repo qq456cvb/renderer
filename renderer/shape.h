@@ -2,6 +2,7 @@
 #define SHAPE_H
 #include "ray.h"
 #include "intersection.h"
+#include "light.h"
 
 class Shape
 {
@@ -13,6 +14,7 @@ public:
     virtual fvec3 sample_p(fvec3 *normal = nullptr) = 0;
     virtual float area() = 0;
 
+    Light *light;
 };
 
 Shape::Shape()

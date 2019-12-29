@@ -2,7 +2,25 @@
 #include <stdio.h>
 #include <stdlib.h> // prevents error for exit on line   18 when compiling with gcc
 #include <limits>
+#include "integrator.h"
+#include "pinhole.h"
+#include "sphere.h"
+#include <armadillo>
+
 int main() {
+  PinholeCam cam;
+  Sphere *sphere = new Sphere(fvec3{0, 0, 2.f}, 1.f);
+  Material *mat = new Material();
+  mat->bsdf = new BSDF();
+  mat->bsdf->add(new BXDF(BXDF::Type::DIFFUSE));
+  Primitive *prim = new Primitive(0, mat, sphere);
+  Scene *scene = new Scene();
+  scene->add_primitive(prim);
+  Integrator *integrator = new Integrator();
+
+
+  Mat<fvec3> img = integrator->render(800, 600);
+
   printf("%f\n", std::numeric_limits<float>::max());
   exit(0);
   Display *d;

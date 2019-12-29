@@ -5,7 +5,7 @@
 class Sphere : public Shape
 {
 public:
-    Sphere();
+    Sphere(const fvec3 &o, const float &r);
     ~Sphere();
 
 private:
@@ -16,7 +16,7 @@ private:
     float area();
 };
 
-Sphere::Sphere()
+Sphere::Sphere(const fvec3 &o, const float &r) : o(o), r(r)
 {
 }
 
