@@ -15,3 +15,15 @@ fvec3 BSDF::f(const fvec3 &out, const fvec3 &in) {
     }
     return res;
 }
+
+BSDF::BSDF()
+{
+}
+
+BSDF::~BSDF()
+{
+}
+
+void BSDF::add(BXDF *bxdf) {
+    bxdfs.push_back(bxdf);
+}

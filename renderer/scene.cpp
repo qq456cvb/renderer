@@ -20,4 +20,5 @@ float Scene::intersect(Ray *ray, Intersection *isect) {
             return dist;
         }
     }
+    return -1.f;
 }

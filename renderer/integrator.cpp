@@ -50,18 +50,38 @@ fvec3 Integrator::path_trace(Ray *ray, int depth, fvec3 beta) {
 }
 
 
-Mat<fvec3> Integrator::render(int width, int height) {
-    Mat<fvec3> img(height, width);
+unsigned char* Integrator::render(int width, int height) {
+    unsigned char *img = new unsigned char[height * width * 4];
 
-    for (size_t x = 0; x < width; x++)
+    for (size_t y = 0; y < height; y++)
     {
-        for (size_t y = 0; y < height; y++)
+        for (size_t x = 0; x < width; x++)
         {
-            Ray ray = cam->gen_ray((x - width / 2) / float(width),
-                (y - height / 2) / float(width));
-            img.at(y, x) = path_trace(&ray);
+            
+            fvec3 color; 
+            color.zeros();
+            float weight = 0.f;
+            for (size_t i = 0; i < 10; i++)
+            {
+                Ray ray = cam->gen_ray((x - width / 2) / float(width),
+                    (y - height / 2) / float(width));
+                color += path_trace(&ray);
+                weight += 1.f;
+            }
+            img[(y * width + x) * 4] = static_cast<unsigned char>(color[0] * 255);
+            img[(y * width + x) * 4 + 1] = static_cast<unsigned char>(color[1] * 255);
+            img[(y * width + x) * 4 + 2] = static_cast<unsigned char>(color[2] * 255);
+            img[(y * width + x) * 4 + 3] = 255;
         }
         
     }
-    
+    return img;
 } 
+
+Integrator::Integrator()
+{
+}
+
+Integrator::~Integrator()
+{
+}

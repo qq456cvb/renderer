@@ -29,3 +29,13 @@ fvec3 BXDF::f(const fvec3 &out, const fvec3 &in) {
         return fvec3();
     }
 }
+
+
+BXDF::BXDF(BXDF::Type type)
+{
+    this->type = type;
+}
+
+BXDF::~BXDF()
+{
+}

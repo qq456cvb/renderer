@@ -19,7 +19,7 @@ fmat33 rot(const fvec3 &a, const fvec3 &b) {
 }
 
 
-PinholeCam::PinholeCam(const fvec3 &principal_axis, const fvec3 &c, float fov)
+PinholeCam::PinholeCam(fvec3 principal_axis, fvec3 c, float fov)
 {
     this->c = c;
     this->pa = principal_axis;

@@ -20,11 +20,4 @@ private:
 
 };
 
-BSDF::BSDF()
-{
-}
-
-BSDF::~BSDF()
-{
-}
 #endif

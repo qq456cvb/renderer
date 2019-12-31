@@ -27,12 +27,21 @@ float Sphere::intersect(Ray *ray, Intersection *isect) {
 
 fvec3 Sphere::sample_p(fvec3 *normal) {
     float theta = acos(1. - 2 * arma::randu());
-    float phi = arma::randu() * math::pi() * 2;
+    float phi = arma::randu() * datum::pi * 2;
     fvec3 n = fvec3{sin(theta) * cos(phi), sin(theta) * sin(phi), cos(theta)};
     if (normal) *normal = n;
     return o + r * n;
 }
 
 float Sphere::area() {
-    return 4 * math::pi() * r * r;
+    return 4 * datum::pi * r * r;
+}
+
+
+Sphere::Sphere(const fvec3 &o, const float &r) : o(o), r(r)
+{
+}
+
+Sphere::~Sphere()
+{
 }

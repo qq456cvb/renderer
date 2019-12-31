@@ -7,6 +7,8 @@
 #include "sphere.h"
 #include <armadillo>
 
+
+// TODO: change raw pointer to shared_ptr
 int main() {
   PinholeCam cam;
   Sphere *sphere = new Sphere(fvec3{0, 0, 2.f}, 1.f);
@@ -18,18 +20,30 @@ int main() {
   scene->add_primitive(prim);
   Integrator *integrator = new Integrator();
 
+  int width = 400;
+  int height = 300;
 
-  Mat<fvec3> img = integrator->render(800, 600);
-
-  printf("%f\n", std::numeric_limits<float>::max());
+  unsigned char *img = integrator->render(width, height);
+  // unsigned char *img = new unsigned char[width * height * 4];
+  // for (size_t i = 0; i < height; i++)
+  // {
+  //   for (size_t j = 0; j < width; j++)
+  //   {
+  //     img[(i * width + j) * 4] = 255;
+  //     img[(i * width + j) * 4 + 1] = 0;
+  //     img[(i * width + j) * 4 + 2] = 0;
+  //     img[(i * width + j) * 4 + 3] = 255;
+  //   }
+  // }
   exit(0);
+  
   Display *d;
   int s;
   Window w;
   XEvent e;
-
                     /* open connection with the server */
   d = XOpenDisplay(NULL);
+  Visual* visual = DefaultVisual(d, 0);
   if(d == NULL) {
     printf("Cannot open display\n");
     exit(1);
@@ -37,8 +51,9 @@ int main() {
   s = DefaultScreen(d);
 
                     /* create window */
-  w = XCreateSimpleWindow(d, RootWindow(d, s), 10, 10, 800, 600, 1,
+  w = XCreateSimpleWindow(d, RootWindow(d, s), 10, 10, width, height, 1,
                      BlackPixel(d, s), WhitePixel(d, s));
+  
 
   // Process Window Close Event through event handler so      XNextEvent does Not fail
   Atom delWindow = XInternAtom( d, "WM_DELETE_WINDOW", 0 );
@@ -49,8 +64,8 @@ int main() {
 
                     /* map (show) the window */
   XMapWindow(d, w);
-
                     /* event loop */
+  XImage *ximage = XCreateImage(d, visual, 24, ZPixmap, 0, (char *)img, width, height, 32, 0);
   while(1) {
     XNextEvent(d, &e);
                     /* draw or redraw the window */
@@ -58,12 +73,23 @@ int main() {
       // XFillRectangle(d, w, DefaultGC(d, s), 20, 20, 10, 10);
     }
                     /* exit on key press */
-    if(e.type == KeyPress)
-      break;
+    if(e.type == KeyPress) {
+      // for (size_t i = 0; i < height; i++)
+      // {
+      //   for (size_t j = 0; j < width; j++)
+      //   {
+      //     img[(i * width + j) * 4] = 0;
+      //     img[(i * width + j) * 4 + 1] = 0;
+      //     img[(i * width + j) * 4 + 2] = 255;
+      //     img[(i * width + j) * 4 + 3] = 255;
+      //   }
+      // }
+    }
 
     // Handle Windows Close Event
     if(e.type == ClientMessage)
-       break;
+      break;
+    XPutImage(d, w, DefaultGC(d, 0), ximage, 0, 0, 0, 0, width, height);
   }
 
                     /* destroy our window */
