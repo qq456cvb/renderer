@@ -21,7 +21,7 @@ float Sphere::intersect(Ray *ray, Intersection *isect) {
         isect->n = normalise(isect->p - o);
         return t2;
     }
-    return 0;
+    return -1.f;
 }
 
 

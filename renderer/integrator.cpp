@@ -7,7 +7,7 @@ fmat33 gen_frame_from_z(fvec3 &z) {
     for (size_t i = 0; i < 3; i++)
     {
         if (abs(z[i]) > 1e-7f) {
-            valid_digit = i;
+            valid_digit = static_cast<int>(i);
             break;
         }
     }
@@ -41,9 +41,9 @@ fvec3 Integrator::path_trace(Ray *ray, int depth, fvec3 beta) {
         next.d = local2world * next.d;
 
         // TODO, add Le contribution
-        beta *= f * dot(next.d, isect.n) / pdf;
+        beta %= f * dot(next.d, isect.n) / pdf;
         fvec3 Li{1.f, 1.f, 1.f};
-        return beta * Li;
+        return beta % Li;
     } else {
         return fvec3{0., 0., 0.};
     }
@@ -53,9 +53,9 @@ fvec3 Integrator::path_trace(Ray *ray, int depth, fvec3 beta) {
 unsigned char* Integrator::render(int width, int height) {
     unsigned char *img = new unsigned char[height * width * 4];
 
-    for (size_t y = 0; y < height; y++)
+    for (int y = 0; y < height; y++)
     {
-        for (size_t x = 0; x < width; x++)
+        for (int x = 0; x < width; x++)
         {
             
             fvec3 color; 
@@ -68,17 +68,20 @@ unsigned char* Integrator::render(int width, int height) {
                 color += path_trace(&ray);
                 weight += 1.f;
             }
+            color /= weight;
             img[(y * width + x) * 4] = static_cast<unsigned char>(color[0] * 255);
             img[(y * width + x) * 4 + 1] = static_cast<unsigned char>(color[1] * 255);
             img[(y * width + x) * 4 + 2] = static_cast<unsigned char>(color[2] * 255);
             img[(y * width + x) * 4 + 3] = 255;
+            
         }
         
     }
     return img;
 } 
 
-Integrator::Integrator()
+Integrator::Integrator(Scene *scene, PinholeCam *cam)
+    : scene(scene), cam(cam)
 {
 }
 

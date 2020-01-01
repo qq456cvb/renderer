@@ -5,11 +5,11 @@ using namespace arma;
 
 void sample_disk_uniform(float *x, float *y) {
     float u1, u2;
-    srand(NULL);
+    srand(0);
     u1 = ((float)rand()) / RAND_MAX;
     u2 = ((float)rand()) / RAND_MAX;
 
-    float r = sqrtf(u1), theta = 2.0f * math::pi() * u2;
+    float r = sqrtf(u1), theta = 2.0f * datum::pi * u2;
     *x = r * cosf(theta);
     *y = r * sinf(theta);
 }
