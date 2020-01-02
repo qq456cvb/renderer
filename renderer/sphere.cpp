@@ -6,29 +6,29 @@ float Sphere::intersect(Ray *ray, Intersection *isect) {
     float c = dot(oo, oo) - r * r;
 
     float delta = b * b - 4 * c;
-    if (delta < 0) return 0;
+    if (delta < 1e-7f) return 0;
 
     float t1 = (-b - sqrt(delta)) / 2.f;
-    if (t1 > 0) {
+    if (t1 > 1e-7f) {
         isect->p = (*ray)(t1);
         isect->n = normalise(isect->p - o);
         return t1;
     }
-   
+
     float t2 = (-b + sqrt(delta)) / 2.f;
-    if (t2 > 0) {
+    if (t2 > 1e-7f) {
         isect->p = (*ray)(t2);
         isect->n = normalise(isect->p - o);
         return t2;
     }
-    return -1.f;
+    return 0;
 }
 
 
 fvec3 Sphere::sample_p(fvec3 *normal) {
-    float theta = acos(1. - 2 * arma::randu());
-    float phi = arma::randu() * datum::pi * 2;
-    fvec3 n = fvec3{sin(theta) * cos(phi), sin(theta) * sin(phi), cos(theta)};
+    float theta = acos(1. - 2 * randu());
+    float phi = randu() * datum::pi * 2;
+    fvec3 n = fvec3{ sin(theta) * cos(phi), sin(theta) * sin(phi), cos(theta) };
     if (normal) *normal = n;
     return o + r * n;
 }

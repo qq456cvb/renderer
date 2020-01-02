@@ -16,8 +16,15 @@ Primitive::Primitive(unsigned int id, Material *mat, Shape *sh) {
 }
 
 float Primitive::intersect(Ray *ray, Intersection *isect) {
-    isect->bsdf = this->material->bsdf;
-    return this->shape->intersect(ray, isect);
+    float res = this->shape->intersect(ray, isect);
+    if (res > 0) {
+        isect->bsdf = this->material->bsdf;
+    }
+    return res;
+}
+
+Primitive::~Primitive() {
+
 }
 
 

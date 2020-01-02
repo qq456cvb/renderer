@@ -4,24 +4,17 @@
 #include "shape.h"
 
 
-class AreaLight
+class AreaLight : public Light
 {
 private:
     Shape *sh;    
 public:
-    fvec3 sample_L(Intersection *isect, fvec3 &wi, float &pdf);
+    float intensity = 1.f;
+    fvec3 sample_L(Intersection *isect, fvec3 &wi, float &pdf, fvec3 &light_p);
     
-    AreaLight();
+    AreaLight(Shape *);
     ~AreaLight();
 };
-
-AreaLight::AreaLight()
-{
-}
-
-AreaLight::~AreaLight()
-{
-}
 
 
 #endif
