@@ -17,6 +17,7 @@
 
 class Scene {
     std::vector<Primitive*> prims;
+    std::vector<Light*> lights;
 public:
     bool add_primitive(Primitive *prim);
     float intersect(Ray *ray, Intersection *isect);

@@ -31,12 +31,27 @@
     <Filter Include="Source Files\camera">
       <UniqueIdentifier>{c1411b5c-2ea6-4128-bc4a-e74bf4c24d8b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\misc">
+      <UniqueIdentifier>{ad9b232d-81c0-4c82-b187-d8749b31cd1b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\shape">
+      <UniqueIdentifier>{f8586f40-18ce-448e-8eec-69f0e842ce8e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\light">
+      <UniqueIdentifier>{b0db6b1f-fa63-4466-8c4c-60a5991269e8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\light">
+      <UniqueIdentifier>{96dedddd-60b6-4f93-a400-ee3e35a2b3c5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\material">
+      <UniqueIdentifier>{713aaf15-6606-40a1-a491-1e52abef54f3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\material">
+      <UniqueIdentifier>{a3885158-3e49-480b-a28f-a302ea656f19}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="sphere.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="bsdf.cpp">
@@ -44,6 +59,27 @@
     </ClCompile>
     <ClCompile Include="pinhole.cpp">
       <Filter>Source Files\camera</Filter>
+    </ClCompile>
+    <ClCompile Include="integrator.cpp">
+      <Filter>Source Files\misc</Filter>
+    </ClCompile>
+    <ClCompile Include="sphere.cpp">
+      <Filter>Source Files\shape</Filter>
+    </ClCompile>
+    <ClCompile Include="primitive.cpp">
+      <Filter>Source Files\shape</Filter>
+    </ClCompile>
+    <ClCompile Include="arealight.cpp">
+      <Filter>Source Files\light</Filter>
+    </ClCompile>
+    <ClCompile Include="scene.cpp">
+      <Filter>Source Files\misc</Filter>
+    </ClCompile>
+    <ClCompile Include="material.cpp">
+      <Filter>Source Files\material</Filter>
+    </ClCompile>
+    <ClCompile Include="bxdf.cpp">
+      <Filter>Source Files\bxdf</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -67,6 +103,24 @@
     </ClInclude>
     <ClInclude Include="montecarlo.hpp">
       <Filter>Header Files\misc</Filter>
+    </ClInclude>
+    <ClInclude Include="integrator.h">
+      <Filter>Header Files\misc</Filter>
+    </ClInclude>
+    <ClInclude Include="primitive.hpp">
+      <Filter>Header Files\shape</Filter>
+    </ClInclude>
+    <ClInclude Include="light.h">
+      <Filter>Header Files\light</Filter>
+    </ClInclude>
+    <ClInclude Include="arealight.h">
+      <Filter>Header Files\light</Filter>
+    </ClInclude>
+    <ClInclude Include="scene.hpp">
+      <Filter>Header Files\misc</Filter>
+    </ClInclude>
+    <ClInclude Include="material.hpp">
+      <Filter>Header Files\material</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -1,4 +1,25 @@
+#if defined(unix)        || defined(__unix)      || defined(__unix__) \
+ || defined(linux)       || defined(__linux)     || defined(__linux__) \
+ || defined(sun)         || defined(__sun) \
+ || defined(BSD)         || defined(__OpenBSD__) || defined(__NetBSD__) \
+ || defined(__FreeBSD__) || defined (__DragonFly__) \
+ || defined(sgi)         || defined(__sgi) \
+ || defined(__MACOSX__)  || defined(__APPLE__) \
+ || defined(__CYGWIN__)
+#define OS 1
+#elif defined(_MSC_VER) || defined(WIN32)  || defined(_WIN32) || defined(__WIN32__) \
+   || defined(WIN64)    || defined(_WIN64) || defined(__WIN64__)
+#define OS 2
+#else
+#define OS 0
+#endif
+
+#if (OS == 1)
 #include <X11/Xlib.h>
+#elif (OS == 2)
+#include <windowsx.h>
+#endif
+
 #include <stdio.h>
 #include <stdlib.h> // prevents error for exit on line   18 when compiling with gcc
 #include <limits>
@@ -27,7 +48,7 @@ int main() {
     unsigned char *img = integrator->render(width, height);
 
     Display *d;
-    int s;
+    
     Window w;
     XEvent e;
                     /* open connection with the server */
@@ -37,7 +58,7 @@ int main() {
         printf("Cannot open display\n");
         exit(1);
     }
-    s = DefaultScreen(d);
+    int s = DefaultScreen(d);
 
                     /* create window */
     w = XCreateSimpleWindow(d, RootWindow(d, s), 10, 10, width, height, 1,
