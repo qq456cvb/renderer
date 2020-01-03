@@ -19,6 +19,7 @@ class Intersection {
 public:
     fvec3 n, p;
     BSDF *bsdf;
+    fmat33 world2local, local2world;
 };
 
 #endif /* intersection_h */

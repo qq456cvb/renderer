@@ -25,6 +25,7 @@ public:
     
     Material *material;
     Shape *shape;
+    Light *light;
     float intersect(Ray *ray, Intersection *isect);
 };
 

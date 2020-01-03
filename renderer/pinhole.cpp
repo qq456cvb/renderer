@@ -1,11 +1,16 @@
 #include "pinhole.h"
+#include "coord.hpp"
 
-
+[[deprecated]]
 fmat33 rot(const fvec3 &a, const fvec3 &b) {
     float cosine = dot(a, b);
     if (1 + cosine < 1e-7) {
-        // TODO
-        return fmat33();
+        fvec3 ax = gen_frame_from_z(b).col(1);
+        fmat33 K{ {0, -ax[2], ax[1]},
+                       {ax[2], 0, -ax[0]},
+                       {-ax[1], ax[0], 0} };
+        fmat33 eye; eye.eye();
+        return eye + 2 * K * K;
     }
     else {
         fvec3 cd = cross(a, b);
@@ -18,11 +23,19 @@ fmat33 rot(const fvec3 &a, const fvec3 &b) {
 }
 
 
-PinholeCam::PinholeCam(fvec3 principal_axis, fvec3 c, float fov)
+PinholeCam::PinholeCam(fvec3 principal_axis, fvec3 c, fvec3 up, float fov)
 {
     this->c = c;
-    this->pa = principal_axis;
-    this->R = rot(fvec3{ 0, 0, 1.f }, principal_axis);
+
+    // left hand coordinates
+    auto z = principal_axis;
+    auto x = cross(z, up);
+    auto y = cross(x, z);
+
+    this->R.col(0) = x;
+    this->R.col(1) = y;
+    this->R.col(2) = z;
+
     this->fov = fov;
 }
 

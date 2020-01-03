@@ -5,7 +5,7 @@
 class PinholeCam
 {
 public:
-    PinholeCam(fvec3 principal_axis = fvec3{0.f, 0.f, 1.f}, fvec3 c = fvec3{0.f, 0.f, 0.f}, const float fov = 120.f);
+    PinholeCam(fvec3 principal_axis = fvec3{0.f, 0.f, 1.f}, fvec3 c = fvec3{0.f, 0.f, 0.f}, fvec3 up = fvec3{ 0.f, 1.f, 0.f }, const float fov = 120.f);
     ~PinholeCam();
 
     float fov;

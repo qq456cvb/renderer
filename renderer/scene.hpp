@@ -17,10 +17,13 @@
 
 class Scene {
     std::vector<Primitive*> prims;
-    std::vector<Light*> lights;
+    
 public:
     bool add_primitive(Primitive *prim);
     float intersect(Ray *ray, Intersection *isect);
+    bool occluded(const fvec3 &s, const fvec3 &e);
+
+    std::vector<Light*> lights;
 };
 
 #endif /* scene_hpp */
