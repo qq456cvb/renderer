@@ -32,11 +32,15 @@
 #include "sphere.h"
 #include "plane.h"
 #include "lambertian.h"
+#include <algorithm>
 #include <armadillo>
 
 
+#define WIDTH 100
+#define HEIGHT 100
+
 // TODO: change raw pointer to shared_ptr
-unsigned char* render(int width, int height) {
+unsigned char* render(int width, int height, bool alpha = false) {
     PinholeCam cam(fvec3{ 0, 0, -1.f });
     Sphere *sphere = new Sphere(fvec3{ 0, 0, -5.f }, 0.9f);
     Sphere *sphere3 = new Sphere(fvec3{ 1.5f, 1.f, -5.f }, 0.3f);
@@ -60,7 +64,7 @@ unsigned char* render(int width, int height) {
     scene->add_primitive(prim4);
     Integrator *integrator = new Integrator(scene, &cam);
 
-    unsigned char *img = integrator->render(width, height);
+    unsigned char *img = integrator->render(width, height, alpha);
     return img;
 }
 
@@ -109,8 +113,7 @@ void RedirectIOToConsole()
     std::cin.clear();
 }
 
-#define WIDTH 800
-#define HEIGHT 600
+
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 void DrawPixels(HWND hwnd, BITMAPINFO *);
 
@@ -202,9 +205,16 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg,
 
 
 #elif (OS == 1)
+
+void updown_img(unsigned char *img) {
+    for (size_t i = 0; i < HEIGHT / 2; i++) {
+        std::swap_ranges(&img[i * WIDTH * 4], &img[(i + 1) * WIDTH * 4], &img[(HEIGHT - 1 - i) * WIDTH * 4]);
+    }
+}
+
 int main() {
-    int width = 400, height = 300;
-    auto img = render(width, height);
+    auto img = render(WIDTH, HEIGHT, true);
+    updown_img(img);
     Display *d;
     
     Window w;
@@ -219,7 +229,7 @@ int main() {
     int s = DefaultScreen(d);
 
                     /* create window */
-    w = XCreateSimpleWindow(d, RootWindow(d, s), 10, 10, width, height, 1,
+    w = XCreateSimpleWindow(d, RootWindow(d, s), 10, 10, WIDTH, HEIGHT, 1,
                      BlackPixel(d, s), WhitePixel(d, s));
 
 
@@ -233,31 +243,22 @@ int main() {
                     /* map (show) the window */
     XMapWindow(d, w);
                     /* event loop */
-    XImage *ximage = XCreateImage(d, visual, 24, ZPixmap, 0, (char *)img, width, height, 32, 0);
+    XImage *ximage = XCreateImage(d, visual, 24, ZPixmap, 0, (char *)img, WIDTH, HEIGHT, 32, 0);
     while(1) {
-    XNextEvent(d, &e);
-                    /* draw or redraw the window */
-    if(e.type == Expose) {
-      // XFillRectangle(d, w, DefaultGC(d, s), 20, 20, 10, 10);
-    }
-                    /* exit on key press */
-    if(e.type == KeyPress) {
-       for (size_t i = 0; i < height; i++)
-       {
-         for (size_t j = 0; j < width; j++)
-         {
-           img[(i * width + j) * 4] = 0;
-           img[(i * width + j) * 4 + 1] = 0;
-           img[(i * width + j) * 4 + 2] = 255;
-           img[(i * width + j) * 4 + 3] = 255;
-         }
-       }
-    }
+        XNextEvent(d, &e);
+                        /* draw or redraw the window */
+        if(e.type == Expose) {
+          // XFillRectangle(d, w, DefaultGC(d, s), 20, 20, 10, 10);
+        }
+                        /* exit on key press */
+        if(e.type == KeyPress) {
+            
+        }
 
-    // Handle Windows Close Event
-    if(e.type == ClientMessage)
-      break;
-    XPutImage(d, w, DefaultGC(d, 0), ximage, 0, 0, 0, 0, width, height);
+        // Handle Windows Close Event
+        if(e.type == ClientMessage)
+          break;
+        XPutImage(d, w, DefaultGC(d, 0), ximage, 0, 0, 0, 0, WIDTH, HEIGHT);
     }
 
                     /* destroy our window */
