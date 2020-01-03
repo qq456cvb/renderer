@@ -5,9 +5,8 @@ using namespace arma;
 
 void sample_disk_uniform(float *x, float *y) {
     float u1, u2;
-    srand(0);
-    u1 = ((float)rand()) / RAND_MAX;
-    u2 = ((float)rand()) / RAND_MAX;
+    u1 = arma::randu();
+    u2 = arma::randu();
 
     float r = sqrtf(u1), theta = 2.0f * datum::pi * u2;
     *x = r * cosf(theta);

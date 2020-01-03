@@ -7,6 +7,7 @@
 //
 
 #include "scene.hpp"
+#include "coord.hpp"
 
 bool Scene::add_primitive(Primitive *prim) {
     this->prims.push_back(prim);
@@ -21,6 +22,8 @@ float Scene::intersect(Ray *ray, Intersection *isect) {
     for (auto prim : prims) {
         float dist = prim->intersect(ray, isect);
         if (dist > 0) {
+            isect->local2world = gen_frame_from_z(isect->n);
+            isect->world2local = arma::inv(isect->local2world);
             return dist;
         }
     }

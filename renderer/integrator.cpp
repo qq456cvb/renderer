@@ -1,31 +1,6 @@
 #include "integrator.h"
 #include <assert.h>
-
-
-// local to world
-fmat33 gen_frame_from_z(fvec3 &z) {
-    int valid_digit = 0;
-    for (size_t i = 0; i < 3; i++)
-    {
-        if (abs(z[i]) > 1e-7f) {
-            valid_digit = static_cast<int>(i);
-            break;
-        }
-    }
-    fvec3 y;
-    y.zeros();
-    y[valid_digit] = -z[(valid_digit + 1) % 3];
-    y[(valid_digit + 1) % 3] = z[valid_digit];
-    y = normalise(y);
-    fvec3 x = cross(y, z);
-
-    fmat33 frame;
-    frame.col(0) = x;
-    frame.col(1) = y;
-    frame.col(2) = z;
-
-    return frame;
-}
+#include "coord.hpp"
 
 
 fvec3 Integrator::path_trace(Ray ray) {
@@ -45,8 +20,8 @@ fvec3 Integrator::path_trace(Ray ray) {
                 fvec3 wi, light_p;
                 float pdf;
                 fvec3 Ll = light->sample_L(&isect, wi, pdf, light_p);
-                fvec3 f = isect.bsdf->f(ray.d, wi);
-                if (!scene->occluded(isect.p + wi * 1e-4f, light_p))
+                fvec3 f = isect.bsdf->f(isect.world2local * ray.d, isect.world2local * wi);
+                if (sum(abs(f)) > 1e-7 && !scene->occluded(isect.p + wi * 1e-4f, light_p))
                 {
                     L += beta % Ll % f * dot(isect.n, wi) / pdf * scene->lights.size();
                 }
@@ -55,16 +30,17 @@ fvec3 Integrator::path_trace(Ray ray) {
             Ray next;
             next.o = isect.p;
             float pdf;
-            // to do, transform to local frame
-            fmat33 local2world = gen_frame_from_z(isect.n);
-            fmat33 world2local = arma::inv(local2world);
-            fvec3 f = isect.bsdf->sample_f(world2local * ray.d, next.d, pdf);
-            next.d = local2world * next.d;
+            fvec3 f = isect.bsdf->sample_f(isect.world2local * ray.d, next.d, pdf);
+            if (sum(abs(f)) < 1e-7)
+            {
+                break;
+            }
+            next.d = isect.local2world * next.d;
             next.o += next.d * 1e-4f;
 
             // TODO, add Le contribution
             beta %= f * dot(next.d, isect.n) / pdf;
-            if (randu() < rs_term)
+            if (arma::randu() < rs_term)
             {
                 break;
             }
@@ -91,16 +67,16 @@ unsigned char* Integrator::render(int width, int height, bool alpha) {
             fvec3 color; 
             color.zeros();
             float weight = 0.f;
-            for (size_t i = 0; i < 10; i++)
+            for (size_t i = 0; i < 20; i++)
             {
-                arma_rng::set_seed_random();
+                arma::arma_rng::set_seed_random();
                 Ray ray = cam->gen_ray((x - width / 2) / float(width),
                     (y - height / 2) / float(width));
                 color += path_trace(ray);
                 weight += 1.f;
             }
             color /= weight;
-            color = clamp(color, 0.f, 1.f);
+            color = arma::clamp(color, 0.f, 1.f);
             
             img[(y * width + x) * stride] = static_cast<unsigned char>(color[0] * 255);
             img[(y * width + x) * stride + 1] = static_cast<unsigned char>(color[1] * 255);

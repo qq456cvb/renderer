@@ -9,7 +9,7 @@ class AreaLight : public Light
 private:
     Shape *sh;    
 public:
-    float intensity = 1.f;
+    float intensity = 3.f;
     fvec3 sample_L(Intersection *isect, fvec3 &wi, float &pdf, fvec3 &light_p);
     
     AreaLight(Shape *);

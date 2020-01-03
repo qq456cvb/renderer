@@ -34,18 +34,17 @@
 
 
 // TODO: change raw pointer to shared_ptr
-
 unsigned char* render(int width, int height) {
-    PinholeCam cam;
-    Sphere *sphere = new Sphere(fvec3{ 0, 0, 5.f }, 0.9f);
-    Sphere *sphere3 = new Sphere(fvec3{ 1.f, 1.f, 5.f }, 0.3f);
+    PinholeCam cam(fvec3{ 0, 0, -1.f });
+    Sphere *sphere = new Sphere(fvec3{ 0, 0, -5.f }, 0.9f);
+    Sphere *sphere3 = new Sphere(fvec3{ 1.5f, 1.f, -5.f }, 0.3f);
     Material *mat = new Material();
     mat->bsdf = new BSDF();
     mat->bsdf->add(new BXDF(BXDF::Type::DIFFUSE));
     Primitive *prim = new Primitive(0, mat, sphere);
     Primitive *prim3 = new Primitive(1, mat, sphere3);
 
-    Sphere *sphere2 = new Sphere(fvec3{ 2.f, 2.f, 3.f }, 1.f);
+    Sphere *sphere2 = new Sphere(fvec3{ 2.f, 2.f, -5.f }, 1.f);
     
     Scene *scene = new Scene();
     scene->lights.push_back(new AreaLight(sphere2));
@@ -133,8 +132,6 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
         TranslateMessage(&msg);
         DispatchMessage(&msg);
     }
-
-    srand(time(NULL));
 
     return (int)msg.wParam;
 }
