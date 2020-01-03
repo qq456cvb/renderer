@@ -26,9 +26,11 @@ fmat33 rot(const fvec3 &a, const fvec3 &b) {
 PinholeCam::PinholeCam(fvec3 principal_axis, fvec3 c, fvec3 up, float fov)
 {
     this->c = c;
+
+    // left hand coordinates
     auto z = principal_axis;
-    auto x = cross(up, z);
-    auto y = cross(z, x);
+    auto x = cross(z, up);
+    auto y = cross(x, z);
 
     this->R.col(0) = x;
     this->R.col(1) = y;

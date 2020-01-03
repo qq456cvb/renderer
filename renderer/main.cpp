@@ -30,6 +30,8 @@
 #include "pinhole.h"
 #include "arealight.h"
 #include "sphere.h"
+#include "plane.h"
+#include "lambertian.h"
 #include <armadillo>
 
 
@@ -38,11 +40,16 @@ unsigned char* render(int width, int height) {
     PinholeCam cam(fvec3{ 0, 0, -1.f });
     Sphere *sphere = new Sphere(fvec3{ 0, 0, -5.f }, 0.9f);
     Sphere *sphere3 = new Sphere(fvec3{ 1.5f, 1.f, -5.f }, 0.3f);
+    Plane *plane = new Plane(fvec3{ 1.f, 0, 0 }, 2.f);
     Material *mat = new Material();
     mat->bsdf = new BSDF();
     mat->bsdf->add(new BXDF(BXDF::Type::DIFFUSE));
+    Material *mat2 = new Material();
+    mat2->bsdf = new BSDF();
+    mat2->bsdf->add(new Lambertian(fvec3{ .25f, .25f, .75f }));
     Primitive *prim = new Primitive(0, mat, sphere);
     Primitive *prim3 = new Primitive(1, mat, sphere3);
+    Primitive *prim4 = new Primitive(2, mat2, plane);
 
     Sphere *sphere2 = new Sphere(fvec3{ 2.f, 2.f, -5.f }, 1.f);
     
@@ -50,6 +57,7 @@ unsigned char* render(int width, int height) {
     scene->lights.push_back(new AreaLight(sphere2));
     scene->add_primitive(prim);
     scene->add_primitive(prim3);
+    scene->add_primitive(prim4);
     Integrator *integrator = new Integrator(scene, &cam);
 
     unsigned char *img = integrator->render(width, height);
