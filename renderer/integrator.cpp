@@ -9,6 +9,7 @@ fvec3 Integrator::path_trace(Ray ray) {
     Intersection isect;
     fvec3 beta;
     beta.ones();
+    bool specular = true;
     for (size_t i = 0; i < max_depth; i++)
     {
         if (scene->intersect(&ray, &isect) > 1e-7f) {
@@ -27,18 +28,27 @@ fvec3 Integrator::path_trace(Ray ray) {
                 }
             }
             
+            if (specular)
+            {
+                if (isect.prim->light)
+                {
+                    L += beta % isect.prim->light->Le(&isect, ray.d);
+                }
+            }
+
             Ray next;
             next.o = isect.p;
             float pdf;
-            fvec3 f = isect.bsdf->sample_f(isect.world2local * ray.d, next.d, pdf);
+            int flags;
+            fvec3 f = isect.bsdf->sample_f(isect.world2local * ray.d, next.d, pdf, flags);
             if (sum(abs(f)) < 1e-7)
             {
                 break;
             }
+            specular = flags & BXDF::SPECULAR;
             next.d = isect.local2world * next.d;
             next.o += next.d * 1e-4f;
 
-            // TODO, add Le contribution
             beta %= f * dot(next.d, isect.n) / pdf;
             if (arma::randu() < rs_term)
             {
@@ -67,7 +77,7 @@ unsigned char* Integrator::render(int width, int height, bool alpha) {
             fvec3 color; 
             color.zeros();
             float weight = 0.f;
-            for (size_t i = 0; i < 20; i++)
+            for (size_t i = 0; i < 30; i++)
             {
                 arma::arma_rng::set_seed_random();
                 Ray ray = cam->gen_ray((x - width / 2) / float(width),
@@ -76,7 +86,11 @@ unsigned char* Integrator::render(int width, int height, bool alpha) {
                 weight += 1.f;
             }
             color /= weight;
-            color = arma::clamp(color, 0.f, 1.f);
+            if (arma::max(color) > 1.f)
+            {
+                color /= arma::max(color);
+            }
+            //color = arma::clamp(color, 0.f, 1.f);
             
             img[(y * width + x) * stride] = static_cast<unsigned char>(color[0] * 255);
             img[(y * width + x) * stride + 1] = static_cast<unsigned char>(color[1] * 255);

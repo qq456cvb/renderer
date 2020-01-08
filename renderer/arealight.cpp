@@ -11,7 +11,11 @@ fvec3 AreaLight::sample_L(Intersection *isect, fvec3 &wi, float &pdf, fvec3 &lig
     return fvec3{1.f, 1.f, 1.f} * intensity;
 }
 
-AreaLight::AreaLight(Shape *sh) : sh(sh)
+fvec3 AreaLight::Le(Intersection *isect, const fvec3 &wi) {
+    return fvec3{ 1.f, 1.f, 1.f } *intensity;
+}
+
+AreaLight::AreaLight(Shape *sh, float intensity) : sh(sh), intensity(intensity)
 {
 }
 

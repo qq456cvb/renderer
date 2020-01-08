@@ -1,10 +1,11 @@
 #include "bsdf.h"
 
-fvec3 BSDF::sample_f(const fvec3 &out, fvec3 &in, float &pdf) {
+fvec3 BSDF::sample_f(const fvec3 &out, fvec3 &in, float &pdf, int &flags) {
     int num_bxdfs = static_cast<int>(bxdfs.size());
     int bxdf_idx = static_cast<int>(arma::randi(arma::distr_param(0, num_bxdfs - 1)));
     fvec3 res = bxdfs[bxdf_idx]->sample_f(out, in, pdf);
     pdf /= num_bxdfs;
+    flags = bxdfs[bxdf_idx]->type;
     return res;
 }
 

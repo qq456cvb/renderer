@@ -36,30 +36,37 @@
 #include <armadillo>
 
 
-#define WIDTH 100
-#define HEIGHT 100
+#define WIDTH 800
+#define HEIGHT 600
 
 // TODO: change raw pointer to shared_ptr
 unsigned char* render(int width, int height, bool alpha = false) {
     PinholeCam cam(fvec3{ 0, 0, -1.f });
     Sphere *sphere = new Sphere(fvec3{ 0, 0, -5.f }, 0.9f);
-    Sphere *sphere3 = new Sphere(fvec3{ 1.5f, 1.f, -5.f }, 0.3f);
+    Sphere *sphere3 = new Sphere(fvec3{ 1.f, 1.f, -5.f }, 0.3f);
     Plane *plane = new Plane(fvec3{ 1.f, 0, 0 }, 2.f);
     Material *mat = new Material();
     mat->bsdf = new BSDF();
     mat->bsdf->add(new BXDF(BXDF::Type::DIFFUSE));
     Material *mat2 = new Material();
     mat2->bsdf = new BSDF();
-    mat2->bsdf->add(new Lambertian(fvec3{ .25f, .25f, .75f }));
-    Primitive *prim = new Primitive(0, mat, sphere);
-    Primitive *prim3 = new Primitive(1, mat, sphere3);
-    Primitive *prim4 = new Primitive(2, mat2, plane);
+    mat2->bsdf->add(new BXDF(BXDF::Type::SPECULAR));
+    Material *mat3 = new Material();
+    mat3->bsdf = new BSDF();
+    mat3->bsdf->add(new Lambertian(fvec3{ 0.f, 0.f, .75f }));
+    Primitive *prim = new Primitive(0, mat2, sphere);
+    Primitive *prim3 = new Primitive(2, mat, sphere3);
+    Primitive *prim4 = new Primitive(3, mat3, plane);
 
     Sphere *sphere2 = new Sphere(fvec3{ 2.f, 2.f, -5.f }, 1.f);
+    Primitive *prim2 = new Primitive(1, mat, sphere2);
     
     Scene *scene = new Scene();
-    scene->lights.push_back(new AreaLight(sphere2));
+    //scene->lights.push_back(new AreaLight(sphere2, 3.f));
+    prim2->light = new AreaLight(prim2->shape, 10.f);
+    scene->add_primitive(prim2);
     scene->add_primitive(prim);
+    
     scene->add_primitive(prim3);
     scene->add_primitive(prim4);
     Integrator *integrator = new Integrator(scene, &cam);

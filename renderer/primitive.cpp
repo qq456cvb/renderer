@@ -19,6 +19,7 @@ float Primitive::intersect(Ray *ray, Intersection *isect) {
     float res = this->shape->intersect(ray, isect);
     if (res > 0) {
         isect->bsdf = this->material->bsdf;
+        isect->prim = this;
     }
     return res;
 }

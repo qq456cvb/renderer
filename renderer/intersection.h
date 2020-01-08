@@ -13,6 +13,7 @@
 #include "bsdf.h"
 using namespace arma;
 
+class Primitive;
 
 class Intersection {
     
@@ -20,6 +21,7 @@ public:
     fvec3 n, p;
     BSDF *bsdf;
     fmat33 world2local, local2world;
+    Primitive *prim;
 };
 
 #endif /* intersection_h */
